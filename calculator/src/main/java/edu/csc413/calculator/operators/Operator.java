@@ -1,6 +1,8 @@
 package edu.csc413.calculator.operators;
 
 import edu.csc413.calculator.evaluator.Operand;
+import java.util.Map;
+import java.util.HashMap;
 
 public abstract class  Operator {
     // The Operator class should contain an instance of a HashMap
@@ -13,6 +15,16 @@ public abstract class  Operator {
     // HashMap operators = new HashMap();
     // operators.put( "+", new AdditionOperator() );
     // operators.put( "-", new SubtractionOperator() );
+
+    private static Map<String, Operator> operatorMap;
+    static {
+        operatorMap = new HashMap<>();
+        operatorMap.put("+", new AddOperator());
+        operatorMap.put("-", new SubtractOperator());
+        operatorMap.put("*", new MultiplyOperator());
+        operatorMap.put("/", new DivideOperator());
+        operatorMap.put("^", new PowerOperator());
+    }
 
     /**
      * retrieve the priority of an Operator
@@ -37,7 +49,7 @@ public abstract class  Operator {
      * @return reference to a Operator instance.
      */
     public static Operator getOperator(String token) {
-        return null;
+        return operatorMap.get(token);
     }
 
     
@@ -48,6 +60,60 @@ public abstract class  Operator {
      * Think about what happens if we add more operators.
      */
     public static boolean check(String token) {
-        return false;
+        return operatorMap.containsKey(token);
+    }
+}
+
+class AddOperator extends Operator{
+    public int priority() {
+        return 1;
+    }
+
+    public Operand execute(Operand operandOne, Operand operandTwo) {
+        return new Operand(operandOne.getValue() + operandTwo.getValue());
+    }
+}
+
+class SubtractOperator extends Operator{
+
+    public int priority() {
+        return 1;
+    }
+
+    public Operand execute(Operand operandOne, Operand operandTwo) {
+        return new Operand(operandOne.getValue() - operandTwo.getValue());
+    }
+}
+
+class MultiplyOperator extends Operator{
+
+    public int priority() {
+        return 2;
+    }
+
+    public Operand execute(Operand operandOne, Operand operandTwo) {
+        return new Operand(operandOne.getValue() * operandTwo.getValue());
+    }
+}
+
+class DivideOperator extends Operator{
+
+    public int priority() {
+        return 2;
+    }
+
+    public Operand execute(Operand operandOne, Operand operandTwo) {
+        return new Operand(operandOne.getValue() / operandTwo.getValue());
+    }
+}
+
+class PowerOperator extends Operator{
+
+    public int priority() {
+        return 3;
+    }
+
+    public Operand execute(Operand operandOne, Operand operandTwo) {
+        return new Operand((int) Math.pow(operandOne.getValue(), operandTwo.getValue()));
     }
 }
