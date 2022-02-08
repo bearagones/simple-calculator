@@ -13,7 +13,7 @@ public class Evaluator {
   private Stack<Operand> operandStack;
   private Stack<Operator> operatorStack;
   private StringTokenizer expressionTokenizer;
-  private final String delimiters = " +/*-^";
+  private final String delimiters = " +/*-^()";
 
   public Evaluator() {
     operandStack = new Stack<>();
@@ -50,7 +50,7 @@ public class Evaluator {
           // The Operator class should contain an instance of a HashMap,
           // and values will be instances of the Operators.  See Operator class
           // skeleton for an example.
-          Operator newOperator = new Operator();
+          Operator newOperator = Operator.getOperator(expressionToken);
         
           while (operatorStack.peek().priority() >= newOperator.priority() ) {
             // note that when we eval the expression 1 - 2 we will
