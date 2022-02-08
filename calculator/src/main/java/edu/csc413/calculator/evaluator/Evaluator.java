@@ -61,16 +61,23 @@ public class Evaluator {
             Operand operandTwo = operandStack.pop();
             Operand operandOne = operandStack.pop();
             Operand result = operatorFromStack.execute( operandOne, operandTwo );
-            operandStack.push( result );
+            operandStack.push( result ); // this how we reach our final result
           }
 
-          operatorStack.push( newOperator );
+          if (expressionToken.equals("(")) {
+            operatorStack.push( newOperator );
+          }
+
+          if (expressionToken.equals(")")) {
+            process();
+          }
         }
       }
     }
+    return operandStack.peek().getValue();
+  }
 
-
-    // Control gets here when we've picked up all of the tokens; you must add
+    // Control gets here when we've picked up all the tokens; you must add
     // code to complete the evaluation - consider how the code given here
     // will evaluate the expression 1+2*3
     // When we have no more tokens to scan, the operand stack will contain 1 2
@@ -79,6 +86,13 @@ public class Evaluator {
     // that is, we should keep evaluating the operator stack until it is empty;
     // Suggestion: create a method that processes the operator stack until empty.
 
-    return 0;
+  public void process() {
+    while (operatorStack.peek().priority() > 1) {
+      Operator operatorFromStack = operatorStack.pop();
+      Operand operandTwo = operandStack.pop();
+      Operand operandOne = operandStack.pop();
+      operatorFromStack.execute( operandOne, operandTwo );
+      operatorStack.pop(); // move onto the next operator
+    }
   }
 }
