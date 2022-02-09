@@ -24,6 +24,8 @@ public abstract class  Operator {
         operatorMap.put("*", new MultiplyOperator());
         operatorMap.put("/", new DivideOperator());
         operatorMap.put("^", new PowerOperator());
+        operatorMap.put("(", new ParenthesesOperator());
+        operatorMap.put(")", new ParenthesesOperator());
     }
 
     /**
