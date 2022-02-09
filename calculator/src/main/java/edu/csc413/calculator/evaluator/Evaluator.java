@@ -21,6 +21,8 @@ public class Evaluator {
   }
 
   public int evaluateExpression(String expression ) throws InvalidTokenException {
+    operandStack.clear();
+    operatorStack.clear();
     String expressionToken;
 
     // The 3rd argument is true to indicate that the delimiters should be used
@@ -45,14 +47,14 @@ public class Evaluator {
             throw new InvalidTokenException(expressionToken);
           }
 
-
           // TODO Operator is abstract - these two lines will need to be fixed:
           // The Operator class should contain an instance of a HashMap,
           // and values will be instances of the Operators.  See Operator class
           // skeleton for an example.
           Operator newOperator = Operator.getOperator(expressionToken);
         
-          while (operatorStack.peek().priority() >= newOperator.priority() ) {
+          while (!operatorStack.isEmpty() && operatorStack.peek().priority() >= newOperator.priority() ) {
+
             // note that when we eval the expression 1 - 2 we will
             // push the 1 then the 2 and then do the subtraction operation
             // This means that the first number to be popped is the
@@ -61,20 +63,16 @@ public class Evaluator {
             Operand operandTwo = operandStack.pop();
             Operand operandOne = operandStack.pop();
             Operand result = operatorFromStack.execute( operandOne, operandTwo );
-            operandStack.push( result ); // this how we reach our final result
+            operandStack.push( result );
           }
 
-          if (expressionToken.equals("(")) {
-            operatorStack.push( newOperator );
-          }
-
-          if (expressionToken.equals(")")) {
-            process();
-          }
+          operatorStack.push(newOperator);
         }
       }
     }
-    return operandStack.peek().getValue();
+
+    process();
+    return operandStack.pop().getValue();
   }
 
     // Control gets here when we've picked up all the tokens; you must add
@@ -87,12 +85,12 @@ public class Evaluator {
     // Suggestion: create a method that processes the operator stack until empty.
 
   public void process() {
-    while (operatorStack.peek().priority() > 1) {
+    while (operatorStack.size() > 0) {
       Operator operatorFromStack = operatorStack.pop();
       Operand operandTwo = operandStack.pop();
       Operand operandOne = operandStack.pop();
-      operatorFromStack.execute( operandOne, operandTwo );
-      operatorStack.pop(); // move onto the next operator
+      Operand result = operatorFromStack.execute( operandOne, operandTwo );
+      operandStack.push(result); // move onto the next operator
     }
   }
 }
