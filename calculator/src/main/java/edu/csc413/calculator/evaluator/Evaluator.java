@@ -33,9 +33,7 @@ public class Evaluator {
     // the priority of any operator in the operator stack other than
     // the usual mathematical operators - "+-*/" - should be less than the priority
     // of the usual operators
-
-
-
+    
     while ( this.expressionTokenizer.hasMoreTokens() ) {
       // filter out spaces
       if ( !( expressionToken = this.expressionTokenizer.nextToken() ).equals( " " )) {
