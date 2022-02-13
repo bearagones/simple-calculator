@@ -71,7 +71,7 @@ public class Evaluator {
             continue;
           }
 
-          while (!operatorStack.isEmpty() && operatorStack.peek().priority() >= newOperator.priority() && !operatorStack.peek().equals(Operator.getOperator("("))) {
+          while (!operatorStack.isEmpty() && operatorStack.peek().priority() >= newOperator.priority()) {
 
             // note that when we eval the expression 1 - 2 we will
             // push the 1 then the 2 and then do the subtraction operation
