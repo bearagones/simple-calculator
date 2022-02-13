@@ -21,8 +21,6 @@ public class Evaluator {
   }
 
   public int evaluateExpression(String expression ) throws InvalidTokenException {
-    operandStack.clear();
-    operatorStack.clear();
     String expressionToken;
 
     // The 3rd argument is true to indicate that the delimiters should be used
@@ -33,7 +31,7 @@ public class Evaluator {
     // the priority of any operator in the operator stack other than
     // the usual mathematical operators - "+-*/" - should be less than the priority
     // of the usual operators
-    
+
     while ( this.expressionTokenizer.hasMoreTokens() ) {
       // filter out spaces
       if ( !( expressionToken = this.expressionTokenizer.nextToken() ).equals( " " )) {
@@ -50,8 +48,30 @@ public class Evaluator {
           // and values will be instances of the Operators.  See Operator class
           // skeleton for an example.
           Operator newOperator = Operator.getOperator(expressionToken);
-        
-          while (!operatorStack.isEmpty() && operatorStack.peek().priority() >= newOperator.priority() ) {
+
+          if (operatorStack.isEmpty()) {
+            operatorStack.push(newOperator);
+            continue;
+          }
+
+          if (expressionToken.equals("(")) {
+            operatorStack.push(newOperator);
+            continue;
+          }
+
+          if (expressionToken.equals(")")) {
+            while(!operatorStack.peek().equals(Operator.getOperator("("))){
+              Operator operatorFromStack = operatorStack.pop();
+              Operand operandTwo = operandStack.pop();
+              Operand operandOne = operandStack.pop();
+              Operand result = operatorFromStack.execute( operandOne, operandTwo );
+              operandStack.push( result );
+            }
+            operatorStack.pop();
+            continue;
+          }
+
+          while (!operatorStack.isEmpty() && operatorStack.peek().priority() >= newOperator.priority() && !operatorStack.peek().equals(Operator.getOperator("("))) {
 
             // note that when we eval the expression 1 - 2 we will
             // push the 1 then the 2 and then do the subtraction operation
@@ -63,12 +83,10 @@ public class Evaluator {
             Operand result = operatorFromStack.execute( operandOne, operandTwo );
             operandStack.push( result );
           }
-
           operatorStack.push(newOperator);
         }
       }
     }
-
     process();
     return operandStack.pop().getValue();
   }
@@ -83,7 +101,7 @@ public class Evaluator {
     // Suggestion: create a method that processes the operator stack until empty.
 
   public void process() {
-    while (operatorStack.size() > 0) {
+    while (!operatorStack.isEmpty()) {
       Operator operatorFromStack = operatorStack.pop();
       Operand operandTwo = operandStack.pop();
       Operand operandOne = operandStack.pop();
