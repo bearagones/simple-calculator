@@ -77,9 +77,14 @@ public class EvaluatorUI extends JFrame implements ActionListener {
         Object buttonSource = actionEventObject.getSource();
         String oldText = this.expressionTextField.getText();
 
+        // for-loop to traverse through the buttons array
         for(int i = 0; i < buttons.length; i++) {
+
+            // if button pressed is an integer or operator, show button on screen
             if (buttonSource == buttons[i] && i!=14 && i!=18 && i!=19) {
                 expressionTextField.setText(oldText + buttonPressed);
+
+            // if button pressed is "=", evaluate the expression
             } else if(buttonSource == buttons[14]) {
                 Evaluator evaluator = new Evaluator();
                 try {
@@ -87,10 +92,14 @@ public class EvaluatorUI extends JFrame implements ActionListener {
                 } catch (InvalidTokenException e) {
                     e.printStackTrace();
                 }
+
+            // if button pressed is "C", remove the last integer or operator
             } else if (buttonSource == buttons[18]) {
                 if (!oldText.isEmpty()) {
                     expressionTextField.setText(oldText.substring(0, oldText.length()-1));
                 }
+
+            // if button pressed is "CE", clear the text entirely
             } else if (buttonSource == buttons[19]) {
                 expressionTextField.setText("");
             }

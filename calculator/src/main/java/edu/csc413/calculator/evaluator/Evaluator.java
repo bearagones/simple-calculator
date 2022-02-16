@@ -49,17 +49,21 @@ public class Evaluator {
           // skeleton for an example.
           Operator newOperator = Operator.getOperator(expressionToken);
 
+          // if-statement to add the operator to the stack if it is empty
           if (operatorStack.isEmpty()) {
             operatorStack.push(newOperator);
             continue;
           }
 
+          // if-statement to move onto the next operator if "(" is encountered on the stack
           if (expressionToken.equals("(")) {
             operatorStack.push(newOperator);
             continue;
           }
 
+          // if-statement to evaluate what is inside the parentheses once ")" is encountered
           if (expressionToken.equals(")")) {
+            // while-loop to keep evaluating until the "(" is encountered
             while(!operatorStack.peek().equals(Operator.getOperator("("))){
               Operator operatorFromStack = operatorStack.pop();
               Operand operandTwo = operandStack.pop();
@@ -100,6 +104,7 @@ public class Evaluator {
     // that is, we should keep evaluating the operator stack until it is empty;
     // Suggestion: create a method that processes the operator stack until empty.
 
+  // process method to continuously process the operator stack until empty
   public void process() {
     while (!operatorStack.isEmpty()) {
       Operator operatorFromStack = operatorStack.pop();
